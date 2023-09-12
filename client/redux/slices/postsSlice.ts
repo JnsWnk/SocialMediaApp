@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import * as api from "../../src/api";
-import { Post } from "@/components/PostForm";
+import { PostType } from "@/components/PostForm";
 
 export interface PostsState {
   value: Array<any>;
@@ -20,7 +20,7 @@ export const fetchPosts = createAsyncThunk("posts/getAll", async () => {
 
 export const createPost = createAsyncThunk(
   "posts/create",
-  async (post: Post) => {
+  async (post: PostType) => {
     const response = await api.createPost(post);
     return response.data;
   }

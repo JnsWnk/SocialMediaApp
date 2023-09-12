@@ -5,6 +5,6 @@ export type DbPost = {
   author: string;
   tags: string[];
   selectedFile: string;
-  likeCount: Number;
+  likeCount: number;
   createdAt: Date;
 };

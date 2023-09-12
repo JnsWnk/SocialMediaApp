@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import postRoutes from "./routes/posts.js";
+import userRoutes from "./routes/users.js";
 
 const app = express();
 app.use(cors());
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 dotenv.config();
 
 app.use("/posts", postRoutes);
+app.use("/users", userRoutes);
 
 // https://cloud.mongodb.com/v2/64da7be8743ecb785b1bae48#/overview
 const CONN_URL = process.env.DB_URL;
