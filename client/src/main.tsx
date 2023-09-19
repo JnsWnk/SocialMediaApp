@@ -12,6 +12,8 @@ import PostForm from "./components/PostForm";
 import App from "./App";
 import Register from "./routes/register";
 import { Login } from "./routes/login";
+import Profile from "./routes/profile";
+import PrivateRoute from "./routes/privateRoute";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/profile",
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
       },
     ],
   },

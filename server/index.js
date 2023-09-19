@@ -2,15 +2,38 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import multer from "multer";
 
 import postRoutes from "./routes/posts.js";
 import userRoutes from "./routes/users.js";
+
+import { register } from "./controllers/users.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "50mb", extended: true }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 dotenv.config();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/assets"); // Specify the directory where uploaded files will be stored
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original file name for the uploaded file
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+    fieldSize: 5 * 1024 * 1024, // 5MB
+  },
+});
+
+//Routes with files
+app.post("/users/register", upload.single("image"), register);
 
 app.use("/posts", postRoutes);
 app.use("/users", userRoutes);

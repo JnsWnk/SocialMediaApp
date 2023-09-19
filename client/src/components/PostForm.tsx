@@ -7,18 +7,15 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "@./redux/hooks";
-import { createPost } from "@./redux/slices/postsSlice";
 import { Card } from "./ui/card";
-import { cn } from "@/lib/utils";
-import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { ChangeEvent, useState } from "react";
+import { createPost } from "@/api";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   title: z
@@ -47,8 +44,8 @@ const formSchema = z.object({
 export type PostType = z.infer<typeof formSchema>;
 
 export default function PostForm() {
-  const dispatch = useAppDispatch();
   const [files, setFiles] = useState<File[]>([]);
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,8 +60,16 @@ export default function PostForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    dispatch(createPost(values));
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await createPost(values);
+      if (response.data) {
+        console.log("Successfull");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("Error");
+    }
   }
 
   const handleImage = (

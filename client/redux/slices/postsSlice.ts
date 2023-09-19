@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import * as api from "../../src/api";
-import { PostType } from "@/components/PostForm";
-
 export interface PostsState {
   value: Array<any>;
   status: "idle" | "loading" | "failed";
@@ -17,14 +15,6 @@ export const fetchPosts = createAsyncThunk("posts/getAll", async () => {
   const response = await api.fetchPosts();
   return response.data;
 });
-
-export const createPost = createAsyncThunk(
-  "posts/create",
-  async (post: PostType) => {
-    const response = await api.createPost(post);
-    return response.data;
-  }
-);
 
 export const postsSlice = createSlice({
   name: "posts",
@@ -44,16 +34,6 @@ export const postsSlice = createSlice({
         state.value = action.payload;
       })
       .addCase(fetchPosts.rejected, (state) => {
-        state.status = "failed";
-      })
-      .addCase(createPost.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(createPost.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.value = action.payload;
-      })
-      .addCase(createPost.rejected, (state) => {
         state.status = "failed";
       });
   },

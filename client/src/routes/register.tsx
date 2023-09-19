@@ -1,4 +1,4 @@
-import { updateUser } from "@/api";
+import { registerUser } from "@/api";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -38,6 +38,7 @@ export type UserType = z.infer<typeof formSchema>;
 export default function Register() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [files, setFiles] = useState<File>();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,12 +57,11 @@ export default function Register() {
         formData.append(key, value);
       }
     }
-    console.log("Sending: ", values.name);
-    const response = await updateUser(formData);
+    const response = await registerUser(formData);
     const newUser = await response.data;
     setIsLoading(false);
     if (newUser) {
-      return redirect("/login");
+      navigate("/login");
     }
   }
 
@@ -91,7 +91,7 @@ export default function Register() {
           <CardHeader className="space-y-1 grid gap-4">
             <CardTitle className="text-2xl">Create an account</CardTitle>
             <CardDescription>
-              Enter your email below to create your account
+              Sign up with Google or create an account below
             </CardDescription>
             <div className="flex justify-center items-center">
               <Button variant="outline" className="w-3/5">

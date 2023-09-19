@@ -8,9 +8,12 @@ export const fetchPosts = () => axios.get(posts_url);
 
 export const createPost = (post: PostType) => axios.post(posts_url, post);
 
-export const updateUser = (userData: FormData) =>
-  axios.post(users_url, userData, {
+export const registerUser = (userData: FormData) =>
+  axios.post(users_url + "/register", userData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const loginUser = (userData: { email: String; password: String }) =>
+  axios.post(users_url + "/login", userData);

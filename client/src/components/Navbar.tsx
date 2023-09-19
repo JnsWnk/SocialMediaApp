@@ -1,10 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 import { Sun, Moon } from "lucide-react";
+import { loggedIn, logout } from "@./redux/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@./redux/hooks";
 
 const Navbar = () => {
   const { setTheme, theme } = useTheme();
+  const isLoggedIn = useAppSelector(loggedIn);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const logoutUser = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
   return (
     <div className="flex flex-row gap-5 my-4 text-white items-end border-b border-0 justify-between">
@@ -17,12 +27,21 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex flex-row items-end m-1 gap-2">
-        <Link
-          to={`/login`}
-          className="border rounded-md p-2 hover:bg-slate-800"
-        >
-          Sign In
-        </Link>
+        {isLoggedIn ? (
+          <>
+            <Button>
+              <Link to={"/profile"}> Profile </Link>
+            </Button>
+            <Button onClick={() => logoutUser()}> Log Out</Button>
+          </>
+        ) : (
+          <Link
+            to={`/login`}
+            className="border rounded-md p-2 hover:bg-slate-800"
+          >
+            Sign In
+          </Link>
+        )}
         <div>
           {theme == "dark" ? (
             <Button onClick={() => setTheme("light")}>
