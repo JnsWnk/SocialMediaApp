@@ -23,6 +23,22 @@ const userSchema = mongoose.Schema({
     require: true,
     min: 8,
   },
+  friends: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    },
+  ],
+  likedPosts: [
+    {
+      postId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

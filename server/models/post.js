@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
+  userName: String,
   title: String,
   message: String,
-  author: String,
-  tags: [String],
   selectedFile: String,
   likeCount: {
     type: Number,

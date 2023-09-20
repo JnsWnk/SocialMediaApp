@@ -8,6 +8,7 @@ import postRoutes from "./routes/posts.js";
 import userRoutes from "./routes/users.js";
 
 import { register } from "./controllers/users.js";
+import { createPost } from "./controllers/posts.js";
 
 const app = express();
 app.use(cors());
@@ -34,6 +35,7 @@ const upload = multer({
 
 //Routes with files
 app.post("/users/register", upload.single("image"), register);
+app.post("/posts", upload.single("image"), createPost);
 
 app.use("/posts", postRoutes);
 app.use("/users", userRoutes);
