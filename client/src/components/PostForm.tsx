@@ -16,6 +16,9 @@ import { Textarea } from "./ui/textarea";
 import { ChangeEvent, useState } from "react";
 import { createPost } from "@/api";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "@./redux/hooks";
+import { userInfo, tokenInfo } from "@./redux/slices/userSlice";
+import { toast } from "react-toastify";
 
 const formSchema = z.object({
   title: z
@@ -23,52 +26,61 @@ const formSchema = z.object({
     .min(1, {
       message: "Title must be at least 3 characters.",
     })
-    .max(999, {
-      message: "Title has to be shorter than 1000 characters.",
+    .max(99, {
+      message: "Title has to be shorter than 100 characters.",
     }),
   message: z
     .string()
     .min(1, {
-      message: "Message must be at least 3 characters.",
+      message: "Message cant be empty.",
     })
     .max(999, {
       message: "Message has to be shorter than 1000 characters.",
     }),
-  author: z.string(),
-  tags: z.string().array(),
   selectedFile: z.string(),
-  likeCount: z.number(),
-  createdAt: z.date(),
 });
 
 export type PostType = z.infer<typeof formSchema>;
 
 export default function PostForm() {
-  const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
+  const user = useAppSelector(userInfo);
+  const token = useAppSelector(tokenInfo);
+
+  if (user === null || token === null) {
+    navigate("/login");
+    return;
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       message: "",
-      author: "",
-      likeCount: 0,
       selectedFile: "",
-      tags: [],
-      createdAt: new Date(),
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!token || !user) {
+      toast("Please log in to create a post.");
+      return;
+    }
     try {
-      const response = await createPost(values);
+      const formData = new FormData();
+      formData.append("author", user._id);
+      console.log(values);
+      for (const key in values) {
+        const value = values[key as keyof PostType];
+        formData.append(key, value);
+      }
+      const response = await createPost(formData);
       if (response.data) {
-        console.log("Successfull");
+        toast("Sucessfully created post.");
         navigate("/");
       }
     } catch (error) {
-      console.log("Error");
+      toast("Post could not be created.");
     }
   }
 
@@ -81,8 +93,6 @@ export default function PostForm() {
     const fileReader = new FileReader();
 
     if (e.target.files && e.target.files.length > 0) {
-      setFiles(Array.from(e.target.files));
-
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || "";
         fieldChange(imageDataUrl);

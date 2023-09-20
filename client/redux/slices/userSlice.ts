@@ -4,12 +4,12 @@ import * as api from "../../src/api";
 
 export interface UserState {
   user: {
-    _id: String;
-    name: String;
-    email: String;
-    image: String;
+    _id: string;
+    name: string;
+    email: string;
+    image: string;
   } | null;
-  token: String | null;
+  token: string | null;
   loggedIn: boolean;
   status: "idle" | "loading" | "failed";
 }
@@ -41,5 +41,6 @@ export const userSlice = createSlice({
 export const { login, logout } = userSlice.actions;
 export const loggedIn = (state: RootState) => state.user.loggedIn;
 export const userInfo = (state: RootState) => state.user.user;
+export const tokenInfo = (state: RootState) => state.user.token;
 
 export default userSlice.reducer;

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
 import Root from "./routes/root";
 import ErrorPage from "./error-page";
 
@@ -22,7 +23,14 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <App /> },
-      { path: "createPost", element: <PostForm /> },
+      {
+        path: "createPost",
+        element: (
+          <PrivateRoute>
+            <PostForm />
+          </PrivateRoute>
+        ),
+      },
       {
         path: "/login",
         element: <Login />,

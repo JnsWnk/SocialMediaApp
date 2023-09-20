@@ -37,7 +37,6 @@ export type UserType = z.infer<typeof formSchema>;
 
 export default function Register() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [files, setFiles] = useState<File>();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,10 +51,8 @@ export default function Register() {
 
     const formData = new FormData();
     for (const key in values) {
-      if (values.hasOwnProperty(key)) {
-        const value = values[key as keyof UserType];
-        formData.append(key, value);
-      }
+      const value = values[key as keyof UserType];
+      formData.append(key, value);
     }
     const response = await registerUser(formData);
     const newUser = await response.data;
@@ -74,8 +71,6 @@ export default function Register() {
     const fileReader = new FileReader();
 
     if (e.target.files && e.target.files.length > 0) {
-      setFiles(e.target.files[0]);
-
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || "";
         fieldChange(imageDataUrl);
@@ -85,7 +80,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-slate-900 px-28">
+    <div className="flex flex-col min-h-screen px-28">
       <div className="flex justify-center">
         <Card className="w-1/2">
           <CardHeader className="space-y-1 grid gap-4">
@@ -196,7 +191,11 @@ export default function Register() {
                   )}
                 />
                 <Button type="submit" className="w-full">
-                  Create account
+                  {isLoading ? (
+                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <>Create Account</>
+                  )}
                 </Button>
               </form>
             </Form>

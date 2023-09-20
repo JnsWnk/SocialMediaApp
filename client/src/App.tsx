@@ -11,8 +11,10 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <Posts />
+    <div className="flex justify-center">
+      <div className="w-1/2">
+        <Posts />
+      </div>
     </div>
   );
 }

@@ -7,8 +7,7 @@ const Posts = () => {
   const posts = useAppSelector(selectPosts);
   console.log(posts);
   return (
-    <div>
-      <h1> Posts </h1>
+    <div className="flex flex-col gap-4 justify-center align-middle">
       {posts.map((post: DbPost) => (
         <div key={post._id}>
           <Post post={post} />
