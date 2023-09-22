@@ -23,8 +23,8 @@ export const getPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   try {
-    const { userId } = req.body;
-    const posts = await Post.findById({ userId });
+    const userId = req.params.id;
+    const posts = await Post.find({ userId: userId });
     res.status(200).json(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -60,18 +60,22 @@ export const likePost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
+    const isPostLiked = user.likedPosts.some((likedPostId) =>
+      likedPostId.equals(postId)
+    );
 
-    const liked = user.likedPosts.includes(postId);
-    if (liked) {
+    if (isPostLiked) {
+      user.likedPosts = user.likedPosts.filter(
+        (likedPostId) => !likedPostId.equals(postId)
+      );
       post.likeCount--;
-      user.likedPosts.push(postId);
     } else {
-      post.likedCount++;
-      user.likedPosts.remove(postId);
+      user.likedPosts.push(postId);
+      post.likeCount++;
     }
-    await user.save();
-    await post.save();
-    res.status(200).json({ postId: postId, likedCound: post.likedCount });
+    const savedPost = await post.save();
+    const savedUser = await user.save();
+    res.status(200).json({ likedPosts: savedUser.likedPosts, post: savedPost });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

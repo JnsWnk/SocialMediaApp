@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import * as api from "../../src/api";
 
 export interface UserState {
   user: {
@@ -8,6 +7,9 @@ export interface UserState {
     name: string;
     email: string;
     image: string;
+    imageId: string;
+    likedPosts: string[];
+    friends: string[];
   } | null;
   token: string | null;
   loggedIn: boolean;
@@ -35,10 +37,13 @@ export const userSlice = createSlice({
       state.token = null;
       state.loggedIn = false;
     },
+    updateLikes: (state, action) => {
+      if (state.user) state.user.likedPosts = action.payload.likedPosts;
+    },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, updateLikes } = userSlice.actions;
 export const loggedIn = (state: RootState) => state.user.loggedIn;
 export const userInfo = (state: RootState) => state.user.user;
 export const tokenInfo = (state: RootState) => state.user.token;

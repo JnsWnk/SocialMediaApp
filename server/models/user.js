@@ -14,6 +14,10 @@ const userSchema = mongoose.Schema({
     max: 50,
     unique: true,
   },
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ProfilePicture",
+  },
   image: {
     type: String,
     default: "",
@@ -33,10 +37,8 @@ const userSchema = mongoose.Schema({
   ],
   likedPosts: [
     {
-      postId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Post",
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
     },
   ],
 });

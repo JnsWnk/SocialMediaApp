@@ -21,14 +21,6 @@ import { userInfo, tokenInfo } from "@./redux/slices/userSlice";
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
-  title: z
-    .string()
-    .min(1, {
-      message: "Title must be at least 3 characters.",
-    })
-    .max(99, {
-      message: "Title has to be shorter than 100 characters.",
-    }),
   message: z
     .string()
     .min(1, {
@@ -40,7 +32,7 @@ const formSchema = z.object({
   selectedFile: z.string(),
 });
 
-export type PostType = z.infer<typeof formSchema>;
+type PostType = z.infer<typeof formSchema>;
 
 export default function PostForm() {
   const navigate = useNavigate();
@@ -55,7 +47,6 @@ export default function PostForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
       message: "",
       selectedFile: "",
     },
@@ -68,7 +59,8 @@ export default function PostForm() {
     }
     try {
       const formData = new FormData();
-      formData.append("author", user._id);
+      formData.append("userName", user.name);
+      formData.append("userId", user._id);
       console.log(values);
       for (const key in values) {
         const value = values[key as keyof PostType];
@@ -106,18 +98,6 @@ export default function PostForm() {
       <Card className="w-1/2 flex flex-col p-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Title..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="message"

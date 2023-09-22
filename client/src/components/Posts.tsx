@@ -1,14 +1,10 @@
 import { Post } from "./index";
-import { useAppSelector } from "../../redux/hooks";
-import { selectPosts } from "../../redux/slices/postsSlice";
-import { DbPost } from "@/types/post";
+import { PostType } from "@/types";
 
-const Posts = () => {
-  const posts = useAppSelector(selectPosts);
-  console.log(posts);
+const Posts = (props: { posts: PostType[] }) => {
   return (
     <div className="flex flex-col gap-4 justify-center align-middle">
-      {posts.map((post: DbPost) => (
+      {props.posts.map((post: PostType) => (
         <div key={post._id}>
           <Post post={post} />
         </div>

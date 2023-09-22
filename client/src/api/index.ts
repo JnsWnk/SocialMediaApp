@@ -5,7 +5,13 @@ const users_url = import.meta.env.VITE_USERS_URL || "";
 
 export const fetchPosts = () => axios.get(posts_url);
 
+export const fetchUserPosts = (userId: string) =>
+  axios.get(posts_url + "/user/" + userId);
+
 export const createPost = (post: FormData) => axios.post(posts_url, post);
+
+export const likePost = (userId: string, postId: string) =>
+  axios.post(posts_url + "/like", { userId, postId });
 
 export const registerUser = (userData: FormData) =>
   axios.post(users_url + "/register", userData, {
@@ -16,3 +22,5 @@ export const registerUser = (userData: FormData) =>
 
 export const loginUser = (userData: { email: String; password: String }) =>
   axios.post(users_url + "/login", userData);
+
+export const getUser = (userId: string) => axios.get(users_url + "/" + userId);

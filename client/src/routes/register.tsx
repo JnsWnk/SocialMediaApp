@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { redirect, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -33,7 +34,7 @@ const formSchema = z.object({
   image: z.string(),
 });
 
-export type UserType = z.infer<typeof formSchema>;
+type UserType = z.infer<typeof formSchema>;
 
 export default function Register() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -48,18 +49,22 @@ export default function Register() {
 
   async function onSubmit(values: UserType) {
     setIsLoading(true);
-
-    const formData = new FormData();
-    for (const key in values) {
-      const value = values[key as keyof UserType];
-      formData.append(key, value);
+    try {
+      const formData = new FormData();
+      for (const key in values) {
+        const value = values[key as keyof UserType];
+        formData.append(key, value);
+      }
+      const response = await registerUser(formData);
+      const newUser = await response.data;
+      if (newUser) {
+        toast("Successfully created account.");
+        navigate("/login");
+      }
+    } catch (error) {
+      toast("Error when creating account.");
     }
-    const response = await registerUser(formData);
-    const newUser = await response.data;
     setIsLoading(false);
-    if (newUser) {
-      navigate("/login");
-    }
   }
 
   const handleImage = (

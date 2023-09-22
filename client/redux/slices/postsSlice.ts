@@ -23,6 +23,17 @@ export const postsSlice = createSlice({
     clear: (state) => {
       state.value = [];
     },
+    updatePost: (state, action) => {
+      const newPost = action.payload.newPost;
+      console.log;
+      const indexToUpdate = state.value.findIndex(
+        (post) => post._id === newPost._id
+      );
+
+      if (indexToUpdate !== -1) {
+        state.value[indexToUpdate] = newPost;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,7 +50,7 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { clear } = postsSlice.actions;
+export const { clear, updatePost } = postsSlice.actions;
 
 export const selectPosts = (state: RootState) => state.posts.value;
 
