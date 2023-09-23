@@ -1,3 +1,4 @@
+import Post from "../models/post.js";
 import User from "../models/user.js";
 import ProfilePicture from "../models/profilePicture.js";
 import bcrypt from "bcrypt";
@@ -97,5 +98,57 @@ export const follow = async (req, res) => {
     res.status(200).json({ friends: savedUser.friends });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateBio = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { bio } = req.body;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.bio = bio;
+
+    const savedUser = await user.save();
+    res.status(200).json(savedUser.bio);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { currentPw, newPw } = req.body;
+    const user = await User.findById(userId);
+    if (!user) return res.status(400).json({ message: "User does not exist." });
+
+    const match = await bcrypt.compare(currentPw, user.password);
+    if (!match)
+      return res.status(400).json({ message: "Invalid credentials." });
+
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(newPw, salt);
+    user.password = passwordHash;
+    const newUser = await user.save();
+    const userObject = newUser.toObject();
+    delete userObject.password;
+    res.status(200).json({ user: userObject });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getUserPosts = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const posts = await Post.find({ userId: userId });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 };

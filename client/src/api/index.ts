@@ -6,12 +6,12 @@ const users_url = import.meta.env.VITE_USERS_URL || "";
 export const fetchPosts = () => axios.get(posts_url);
 
 export const fetchUserPosts = (userId: string) =>
-  axios.get(posts_url + "/user/" + userId);
+  axios.get(users_url + "/" + userId + "/getPosts");
 
 export const createPost = (post: FormData) => axios.post(posts_url, post);
 
 export const likePost = (userId: string, postId: string) =>
-  axios.post(posts_url + "/like", { userId, postId });
+  axios.post(posts_url + "/" + postId + "/like", { userId });
 
 export const registerUser = (userData: FormData) =>
   axios.post(users_url + "/register", userData, {
@@ -27,3 +27,11 @@ export const getUser = (userId: string) => axios.get(users_url + "/" + userId);
 
 export const followUser = (userIds: { selfId: string; followId: string }) =>
   axios.post(users_url + "/follow", userIds);
+
+export const updateBio = (userId: string, bio: string) =>
+  axios.patch(users_url + "/" + userId + "/updateBio", { bio });
+
+export const updatePassword = (
+  userId: string,
+  value: { currentPw: string; newPw: string }
+) => axios.patch(users_url + "/" + userId + "/updatePassword", value);

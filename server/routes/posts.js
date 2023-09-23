@@ -4,14 +4,14 @@ import {
   getPosts,
   createPost,
   likePost,
-  getUserPosts,
+  getById,
 } from "../controllers/posts.js";
 
 const router = express.Router();
 
 router.get("/", getPosts);
+router.get("/:id", getById);
 router.post("/", createPost);
-router.post("/like", likePost);
-router.get("/user/:id", getUserPosts);
+router.post("/:id/like", likePost);
 
 export default router;

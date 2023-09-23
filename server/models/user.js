@@ -14,6 +14,11 @@ const userSchema = mongoose.Schema({
     max: 50,
     unique: true,
   },
+  bio: {
+    type: String,
+    default: "",
+    max: 500,
+  },
   imageId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "ProfilePicture",

@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch } from "@./redux/hooks";
 import { loginUser } from "@/api";
 import { login } from "@./redux/slices/userSlice";
+import { toast } from "react-toastify";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -42,12 +43,14 @@ export function Login({ className, ...props }: UserAuthFormProps) {
       const response = await loginUser(values);
       const { user, token } = response.data;
       if (!user || !token) {
-        console.log("Error loggin in.");
+        toast("Error login in.");
         return;
       }
       dispatch(login({ user, token }));
       navigate("/");
-    } catch (error) {}
+    } catch (error) {
+      toast("Error login in.");
+    }
     setIsLoading(false);
   }
 

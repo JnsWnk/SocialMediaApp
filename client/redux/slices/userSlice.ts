@@ -5,6 +5,7 @@ export interface UserState {
   user: {
     _id: string;
     name: string;
+    bio: string;
     email: string;
     image: string;
     imageId: string;
@@ -41,13 +42,16 @@ export const userSlice = createSlice({
       if (state.user) state.user.likedPosts = action.payload.likedPosts;
     },
     updateFriends: (state, action) => {
-      console.log(action.payload);
       if (state.user) state.user.friends = action.payload.friends;
+    },
+    updateUserBio: (state, action) => {
+      if (state.user) state.user.bio = action.payload.bio;
     },
   },
 });
 
-export const { login, logout, updateLikes, updateFriends } = userSlice.actions;
+export const { login, logout, updateLikes, updateFriends, updateUserBio } =
+  userSlice.actions;
 export const loggedIn = (state: RootState) => state.user.loggedIn;
 export const userInfo = (state: RootState) => state.user.user;
 export const tokenInfo = (state: RootState) => state.user.token;

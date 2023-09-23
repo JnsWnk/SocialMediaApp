@@ -21,11 +21,11 @@ export const getPosts = async (req, res) => {
   }
 };
 
-export const getUserPosts = async (req, res) => {
+export const getById = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const posts = await Post.find({ userId: userId });
-    res.status(200).json(posts);
+    const id = req.params.id;
+    const post = await Post.findById(id);
+    res.status(200).json(post);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -50,7 +50,8 @@ export const getFriendsPosts = async (req, res) => {
 
 export const likePost = async (req, res) => {
   try {
-    const { userId, postId } = req.body;
+    const { userId } = req.body;
+    const postId = req.params.id;
     const user = await User.findById(userId);
     const post = await Post.findById(postId);
 

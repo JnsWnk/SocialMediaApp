@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@./redux/hooks";
 import { updateFriends, userInfo } from "@./redux/slices/userSlice";
 import { fetchUserPosts, followUser, getUser } from "@/api";
 import { Posts } from "@/components";
+import EditProfile from "@/components/editProfile";
 import { UserType } from "@/types";
 import { Mail, User } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -79,7 +80,7 @@ const Profile = () => {
 
   useEffect(() => {
     getUserData();
-  }, [id]);
+  }, [user, id]);
 
   return (
     <div className="flex justify-center">
@@ -111,24 +112,25 @@ const Profile = () => {
               </div>
             </div>
             <div className="flex items-center">
-              {user && !self ? (
-                <div className="mr-4 flex items-center">
-                  <button
-                    onClick={() => {
-                      follow();
-                    }}
-                    className="bg-[#FFC107] hover:bg-[#ffd24c] text-white py-2 px-4 rounded-full focus:outline-none transition duration-300 font-semibold"
-                  >
-                    {user.friends.includes(userData._id) ? (
-                      <p>Following</p>
-                    ) : (
-                      <p>Follow</p>
-                    )}
-                  </button>
-                </div>
-              ) : (
-                <></>
-              )}
+              {user &&
+                (!self ? (
+                  <div className="mr-4 flex items-center">
+                    <button
+                      onClick={() => {
+                        follow();
+                      }}
+                      className="bg-[#FFC107] hover:bg-[#ffd24c] text-white py-2 px-4 rounded-full focus:outline-none transition duration-300 font-semibold"
+                    >
+                      {user.friends.includes(userData._id) ? (
+                        <p>Following</p>
+                      ) : (
+                        <p>Follow</p>
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  <EditProfile />
+                ))}
             </div>
           </div>
           <div className="mt-8">
