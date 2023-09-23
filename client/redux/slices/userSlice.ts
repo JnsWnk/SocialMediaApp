@@ -40,10 +40,14 @@ export const userSlice = createSlice({
     updateLikes: (state, action) => {
       if (state.user) state.user.likedPosts = action.payload.likedPosts;
     },
+    updateFriends: (state, action) => {
+      console.log(action.payload);
+      if (state.user) state.user.friends = action.payload.friends;
+    },
   },
 });
 
-export const { login, logout, updateLikes } = userSlice.actions;
+export const { login, logout, updateLikes, updateFriends } = userSlice.actions;
 export const loggedIn = (state: RootState) => state.user.loggedIn;
 export const userInfo = (state: RootState) => state.user.user;
 export const tokenInfo = (state: RootState) => state.user.token;

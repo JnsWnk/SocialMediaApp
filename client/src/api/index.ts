@@ -24,3 +24,6 @@ export const loginUser = (userData: { email: String; password: String }) =>
   axios.post(users_url + "/login", userData);
 
 export const getUser = (userId: string) => axios.get(users_url + "/" + userId);
+
+export const followUser = (userIds: { selfId: string; followId: string }) =>
+  axios.post(users_url + "/follow", userIds);

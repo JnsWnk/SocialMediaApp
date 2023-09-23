@@ -75,3 +75,27 @@ export const getUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const follow = async (req, res) => {
+  try {
+    const { selfId, followId } = req.body;
+    const user = await User.findById(selfId);
+    const followUser = await User.findById(followId);
+
+    if (!user || !followUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const following = user.friends.some((friend) => friend.equals(followId));
+
+    if (following) {
+      user.friends = user.friends.filter((friend) => !friend.equals(followId));
+    } else {
+      user.friends.push(followId);
+    }
+    const savedUser = await user.save();
+    res.status(200).json({ friends: savedUser.friends });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
