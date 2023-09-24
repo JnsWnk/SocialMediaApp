@@ -44,6 +44,9 @@ export default function Register() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      email: "",
+      password: "",
+      image: "",
     },
   });
 

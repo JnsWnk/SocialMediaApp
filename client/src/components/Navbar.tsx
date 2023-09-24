@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex flex-row gap-5 items-center border-b border-0 justify-between w-full px-28 backdrop-blur-lg py-3 mb-5 sticky top-0 left-0">
+    <div className="flex flex-row gap-5 items-center border-b border-0 justify-between w-full px-28 backdrop-blur-lg py-3 mb-5 sticky top-0">
       <div className="flex flex-row gap-5 items-end">
         <Link to={"/"} className="text-4xl font-semibold">
           NanoBanano
@@ -29,7 +29,7 @@ const Navbar = () => {
           <div className="flex flex-row gap-2 items-end">
             <Link to={`/profile/${user?._id}`}>
               <img
-                src={user?.image}
+                src={user?.image.image}
                 alt="profile_icon"
                 className="rounded-full w-10 h-10 object-contain border"
               />

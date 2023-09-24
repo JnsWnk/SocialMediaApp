@@ -2,6 +2,7 @@ import axios from "axios";
 
 const posts_url = import.meta.env.VITE_POSTS_URL || "";
 const users_url = import.meta.env.VITE_USERS_URL || "";
+const comments_url = import.meta.env.VITE_COMMENTS_URL || "";
 
 export const fetchPosts = () => axios.get(posts_url);
 
@@ -12,6 +13,9 @@ export const createPost = (post: FormData) => axios.post(posts_url, post);
 
 export const likePost = (userId: string, postId: string) =>
   axios.post(posts_url + "/" + postId + "/like", { userId });
+
+export const likeComment = (userId: string, commentId: string) =>
+  axios.post(comments_url + "/" + commentId + "/like", { userId });
 
 export const registerUser = (userData: FormData) =>
   axios.post(users_url + "/register", userData, {
@@ -35,3 +39,6 @@ export const updatePassword = (
   userId: string,
   value: { currentPw: string; newPw: string }
 ) => axios.patch(users_url + "/" + userId + "/updatePassword", value);
+
+export const commentPost = (userId: string, postId: string, message: string) =>
+  axios.post(posts_url + "/" + postId + "/comment", { userId, message });

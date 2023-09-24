@@ -1,14 +1,17 @@
 import mongoose from "mongoose";
 
-const postSchema = mongoose.Schema({
-  userId: {
+const commentSchema = mongoose.Schema({
+  authorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  userName: String,
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post",
+    required: true,
+  },
   message: String,
-  selectedFile: String,
   likeCount: {
     type: Number,
     default: 0,
@@ -25,6 +28,6 @@ const postSchema = mongoose.Schema({
   },
 });
 
-const Post = mongoose.model("Post", postSchema);
+const Comment = mongoose.model("Comment", commentSchema);
 
-export default Post;
+export default Comment;

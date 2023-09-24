@@ -19,13 +19,9 @@ const userSchema = mongoose.Schema({
     default: "",
     max: 500,
   },
-  imageId: {
+  image: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "ProfilePicture",
-  },
-  image: {
-    type: String,
-    default: "",
   },
   password: {
     type: String,

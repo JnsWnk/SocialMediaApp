@@ -6,6 +6,7 @@ export type PostType = {
   selectedFile: string;
   likeCount: number;
   createdAt: Date;
+  comments: CommentType[];
 };
 
 export type UserType = {
@@ -13,8 +14,20 @@ export type UserType = {
   name: string;
   bio: string;
   email: string;
-  imageId: string;
-  image: string;
+  image: {
+    _id: string;
+    image: string;
+  };
   friends: string[];
   likedPosts: string[];
 } | null;
+
+export type CommentType = {
+  _id: string;
+  authorId: string;
+  postId: string;
+  message: string;
+  likes: number;
+  comments: CommentType[];
+  createdAt: Date;
+};

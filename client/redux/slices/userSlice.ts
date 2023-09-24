@@ -7,8 +7,10 @@ export interface UserState {
     name: string;
     bio: string;
     email: string;
-    image: string;
-    imageId: string;
+    image: {
+      _id: string;
+      image: string;
+    };
     likedPosts: string[];
     friends: string[];
   } | null;

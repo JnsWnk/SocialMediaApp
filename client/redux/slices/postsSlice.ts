@@ -25,7 +25,6 @@ export const postsSlice = createSlice({
     },
     updatePost: (state, action) => {
       const newPost = action.payload.newPost;
-      console.log;
       const indexToUpdate = state.value.findIndex(
         (post) => post._id === newPost._id
       );

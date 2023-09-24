@@ -9,10 +9,16 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { PostType } from "@/types";
-import { ThumbsUp } from "lucide-react";
-import { useState } from "react";
+import { MessageCircle, ThumbsUp } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import RelativeTime from "./ui/relativeTime";
+import Comment from "./Comment";
+import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
+import { FormField, FormItem, FormControl, FormMessage } from "./ui/form";
+import { Input } from "./ui/input";
 
 interface PostProps {
   post: PostType;
@@ -24,6 +30,7 @@ const Post: React.FC<PostProps> = (props) => {
   const liked = useAppSelector(userInfo)?.likedPosts.includes(post._id);
   const buttonClass = liked ? "bg-[#FFC107]" : "";
   const [loading, setLoading] = useState(false);
+  const [commentsVisible, setCommentsVisible] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -52,10 +59,11 @@ const Post: React.FC<PostProps> = (props) => {
   return (
     <div>
       <Card>
-        <CardHeader className="">
+        <CardHeader className="flex flex-row justify-between">
           <Link to={`/profile/${post.userId}`} className="hover:underline">
             {post.userName}
           </Link>
+          <RelativeTime date={new Date(post.createdAt)} />
         </CardHeader>
         <CardContent>
           <p>{post.message}</p>
@@ -63,7 +71,7 @@ const Post: React.FC<PostProps> = (props) => {
             <img src={post.selectedFile} alt="Error loading Image" />
           )}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-5 items-start">
           <div className="flex flex-row gap-2 font-semibold items-center">
             <button
               onClick={() => onLike()}
@@ -76,7 +84,25 @@ const Post: React.FC<PostProps> = (props) => {
               <span className="mr-1">{post.likeCount}</span>
               <span className="text-gray-500">Likes</span>
             </div>
+            <button
+              onClick={() => setCommentsVisible(!commentsVisible)}
+              className="ml-2 flex gap-2 rounded-xl p-2 border border-transparent hover:border-gray-500"
+            >
+              <MessageCircle className="w-6 h-6" /> <span>Comments </span>
+            </button>
           </div>
+
+          {commentsVisible && (
+            <div className="w-full">
+              <form className="flex">
+                <Textarea placeholder="Message..." id="message" />
+                <Button type="submit">Post</Button>
+              </form>
+              {post.comments.map((comment) => (
+                <Comment key={comment._id} comment={comment} user={user} />
+              ))}
+            </div>
+          )}
         </CardFooter>
       </Card>
     </div>

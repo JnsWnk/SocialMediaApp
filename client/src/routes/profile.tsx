@@ -89,7 +89,7 @@ const Profile = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <img
-                src={userData.image}
+                src={userData.image.image}
                 alt="Profile Icon"
                 className="rounded-full w-20 h-20 object-cover"
               />

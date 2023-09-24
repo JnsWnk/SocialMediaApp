@@ -61,7 +61,6 @@ export default function PostForm() {
       const formData = new FormData();
       formData.append("userName", user.name);
       formData.append("userId", user._id);
-      console.log(values);
       for (const key in values) {
         const value = values[key as keyof PostType];
         formData.append(key, value);

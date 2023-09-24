@@ -17,8 +17,7 @@ export const register = async (req, res) => {
     const newUser = new User({
       ...user,
       password: passwordHash,
-      imageId: savedPP._id,
-      image: "",
+      image: savedPP._id,
     });
 
     const savedUser = await newUser.save();
@@ -31,7 +30,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).populate("image").exec();
     if (!user) return res.status(400).json({ message: "User does not exist." });
 
     const match = await bcrypt.compare(password, user.password);
@@ -39,10 +38,8 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials." });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    const image = await ProfilePicture.findById(user.imageId);
     const userObject = user.toObject();
     delete userObject.password;
-    userObject.image = image.image;
     res.status(200).json({ token, user: userObject });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -63,14 +60,12 @@ export const getProfilePicture = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("image");
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
     const userObject = user.toObject();
     delete userObject.password;
-    const image = await ProfilePicture.findById(user.imageId);
-    user.image = image.image;
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -105,16 +100,13 @@ export const updateBio = async (req, res) => {
   try {
     const userId = req.params.id;
     const { bio } = req.body;
-    const user = await User.findById(userId);
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { bio: bio },
+      { new: true }
+    ).exec();
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    user.bio = bio;
-
-    const savedUser = await user.save();
-    res.status(200).json(savedUser.bio);
+    res.status(200).json(user.bio);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
